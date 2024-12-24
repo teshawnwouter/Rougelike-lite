@@ -348,7 +348,7 @@ MonoBehaviour:
   m_AirControl: 1
   m_WhatIsGround:
     serializedVersion: 2
-    m_Bits: 55
+    m_Bits: 4294967295
   m_GroundCheck: {fileID: 4851920919256534}
   m_CeilingCheck: {fileID: 4360676703089906}
   m_CrouchDisableCollider: {fileID: 61627172658033346}
@@ -400,7 +400,7 @@ MonoBehaviour:
   attackPoint: {fileID: 4706544371114292}
   whatIsEnemy:
     serializedVersion: 2
-    m_Bits: 512
+    m_Bits: 0
   isAttacking: 0
 --- !u!1 &1975730589640250
 GameObject:

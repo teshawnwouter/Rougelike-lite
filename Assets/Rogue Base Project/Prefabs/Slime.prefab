@@ -232,7 +232,7 @@ MonoBehaviour:
   attackPoint: {fileID: 4919098605957498}
   whatIsEnemy:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 0
   isAttacking: 0
 --- !u!114 &114261563445306106
 MonoBehaviour:
