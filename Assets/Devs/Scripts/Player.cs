@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,18 +9,15 @@ public class Player : MonoBehaviour
     [Header("movement")]
     private Vector2 moveInputsVectors = Vector2.zero;
     [SerializeField] private float moveSpeed = 2.5f;
-    Rigidbody2D rb;
-    void Start()
+    private Rigidbody2D rb;
+    private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
     }
-    void Update()
-    {
 
-    }
     public void OnMove(InputAction.CallbackContext context)
     {
-        if ((context.performed))
+        if (context.performed)
         {
             moveInputsVectors = context.ReadValue<Vector2>();
             rb.velocity = moveInputsVectors * moveSpeed;
@@ -31,9 +26,9 @@ public class Player : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Item item = collision.GetComponent<Item>();
-        if ((item) != null)
+        if (item != null)
         {
-            inventory.addSpell(item.PickUp, 1);
+            inventory.addSpell(item.PickUp);
             Destroy(collision.gameObject);
         }
         else

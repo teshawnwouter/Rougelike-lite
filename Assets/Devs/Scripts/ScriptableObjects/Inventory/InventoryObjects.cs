@@ -1,25 +1,16 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "spells you have", menuName = "inventory system/inventory")]
 public class InventoryObjects : ScriptableObject
 {
-   public List<SpellContainer> container = new List<SpellContainer>();
-    public void addSpell(Spells spell, int amountofspells)
+    public List<SpellContainer> container = new List<SpellContainer>();
+    public void addSpell(Spells spell)
     {
-        bool hasItem = false;
-        for (int i = 0; i < container.Count; i++)
+        container.Add(new SpellContainer(spell));
+        if (container.Count >= 6)
         {
-            if (container[i].spells == spell) 
-            {
-                container[i].AddSpell(amountofspells);
-                hasItem = true;
-                break;
-            }
-        }if (!hasItem) 
-        { 
-            container.Add(new SpellContainer(spell, amountofspells));
+            container.Remove(container[5]);
         }
     }
 }
@@ -28,14 +19,9 @@ public class InventoryObjects : ScriptableObject
 public class SpellContainer
 {
     public Spells spells;
-    public int amount;
-    public SpellContainer(Spells spells, int amount)
+    public SpellContainer(Spells spells)
     {
         this.spells = spells;
-        this.amount = amount;
     }
-    public void AddSpell(int value)
-    {
-        amount += value;
-    }
+
 }

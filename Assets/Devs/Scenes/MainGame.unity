@@ -332,7 +332,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventory: {fileID: 11400000, guid: 9ab413cbe15953c4c967aa8709d1edaa, type: 2}
-  moveSpeed: 2
+  moveSpeed: 2.5
 --- !u!114 &753607603
 MonoBehaviour:
   m_ObjectHideFlags: 0
