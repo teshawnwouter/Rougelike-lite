@@ -1,7 +1,8 @@
+using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour,IDamageable
 {
     [Header("inventory")]
     public InventoryObjects inventory;
@@ -17,9 +18,17 @@ public class Player : MonoBehaviour
 
     [Header("refrences")]
     private Rigidbody2D rb;
+
+    [Header("Health")]
+    private int health;
+    private int maxHealth = 5;
+
+    [Header("damage")]
+    private int damageDone = 1;
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        health = maxHealth;
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -54,9 +63,21 @@ public class Player : MonoBehaviour
             Debug.Log("no item found");
         }
     }
+    private void OnCollisionEnter(Collision collision)
+    {
+        IDamageable obj = collision.gameObject.GetComponent<IDamageable>();
 
+        if (obj != null)
+        {
+            obj.TakeDamage(damageDone);
+        }
+    }
     private void OnApplicationQuit()
     {
         inventory.container.Clear();
+    }
+    public void TakeDamage(int Amount)
+    {
+        health -= Amount;
     }
 }
