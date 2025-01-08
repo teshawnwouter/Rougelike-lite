@@ -2,13 +2,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "spells you have", menuName = "inventory system/inventory")]
-public class InventoryObjects : ScriptableObject
+public class InventoryObjects : ScriptableObject,IPickUpable
 {
     public List<SpellContainer> container = new List<SpellContainer>();
-    public void addSpell(Spells spell)
+
+    public void AddSpells(Spells spells)
     {
-        container.Add(new SpellContainer(spell));
-        if (container.Count >= 6)
+        container.Add(new SpellContainer(spells));
+        if (container.Count >= 6 )
         {
             container.Remove(container[5]);
         }

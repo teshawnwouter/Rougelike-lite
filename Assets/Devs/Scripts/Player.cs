@@ -19,12 +19,13 @@ public class Player : MonoBehaviour,IDamageable
     [Header("refrences")]
     private Rigidbody2D rb;
 
-    [Header("Health")]
+    [Header("health")]
     private int health;
     private int maxHealth = 5;
 
     [Header("damage")]
     private int damageDone = 1;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -33,12 +34,17 @@ public class Player : MonoBehaviour,IDamageable
 
     public void OnMove(InputAction.CallbackContext context)
     {
-        forwardMovement = context.ReadValue<Vector2>().x;
+        if(context.performed)
+        {
+            forwardMovement = context.ReadValue<Vector2>().x;
+        }
     }
+
     private void Update()
     {
         rb.velocity = new Vector2(forwardMovement * moveSpeed,rb.velocity.y);
     }
+
     public void OnJump(InputAction.CallbackContext context)
     {
         if(context.performed && WhatIsGround())
@@ -46,16 +52,18 @@ public class Player : MonoBehaviour,IDamageable
             rb.velocity += Vector2.up * jumpHeight;
         }
     }
+
     private bool WhatIsGround()
     {
         return Physics2D.OverlapCapsule(groundCheck.position, new Vector2(0.65f, 0.01f), CapsuleDirection2D.Horizontal,0,groundlayer);
     }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Item item = collision.GetComponent<Item>();
         if (item != null)
         {
-            inventory.addSpell(item.PickUp);
+            inventory.AddSpells(item.PickUp);
             Destroy(collision.gameObject);
         }
         else
@@ -63,6 +71,7 @@ public class Player : MonoBehaviour,IDamageable
             Debug.Log("no item found");
         }
     }
+
     private void OnCollisionEnter(Collision collision)
     {
         IDamageable obj = collision.gameObject.GetComponent<IDamageable>();
@@ -72,10 +81,12 @@ public class Player : MonoBehaviour,IDamageable
             obj.TakeDamage(damageDone);
         }
     }
+
     private void OnApplicationQuit()
     {
         inventory.container.Clear();
     }
+
     public void TakeDamage(int Amount)
     {
         health -= Amount;
