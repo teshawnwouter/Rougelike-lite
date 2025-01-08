@@ -4,6 +4,7 @@ public enum PickUpType
     health,
     spell,
 }
+
 public abstract class PickUpItem : ScriptableObject 
 {
     public GameObject prefab;

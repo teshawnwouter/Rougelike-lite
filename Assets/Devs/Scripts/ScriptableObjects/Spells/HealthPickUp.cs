@@ -6,6 +6,7 @@ using UnityEngine;
 public class HealthPickUp : PickUpItem
 {
     public int healthRecovered;
+
     private void Awake()
     {
         pickUpType = PickUpType.health;
