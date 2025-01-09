@@ -1,14 +1,15 @@
 using UnityEngine;
-public enum PickUpType
+public abstract class PickUpItem : ScriptableObject
 {
-    health,
-    spell,
-}
+    public enum PickUpType
+    {
+        health,
+        spell,
+    }
 
-public abstract class PickUpItem : ScriptableObject 
-{
+    [Header("variables")]
     public GameObject prefab;
     public PickUpType pickUpType;
-    [TextArea(20,20)]
+    [TextArea(20, 20)]
     public string description;
 }

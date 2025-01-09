@@ -7,7 +7,7 @@ public class Player : MonoBehaviour,IDamageable
     [Header("inventory")]
     public InventoryObjects inventory;
 
-    [Header("movement")]
+    [Header("movement"),Range(0,15)]
     private float moveSpeed = 2.5f;
     private float forwardMovement;
     private float jumpHeight = 10;
@@ -19,7 +19,7 @@ public class Player : MonoBehaviour,IDamageable
     [Header("refrences")]
     private Rigidbody2D rb;
 
-    [Header("health")]
+    [Header("health"),Range(0,5)]
     private int health;
     private int maxHealth = 5;
 
@@ -63,7 +63,14 @@ public class Player : MonoBehaviour,IDamageable
         Item item = collision.GetComponent<Item>();
         if (item != null)
         {
-            inventory.AddSpells(item.PickUp);
+            // check if there is room for new spells...
+            if (inventory.AddSpells(item.PickUp))
+            {
+                // player feedback, success
+            } else
+            {
+                // player feedback, no more room
+            }
             Destroy(collision.gameObject);
         }
         else

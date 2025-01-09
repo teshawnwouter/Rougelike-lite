@@ -1,4 +1,4 @@
 interface IPickUpable
 {
-    void AddSpells(Spells spells);
+    bool AddSpells(Spells spells);
 }
