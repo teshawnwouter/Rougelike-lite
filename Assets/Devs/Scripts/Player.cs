@@ -1,61 +1,101 @@
-using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Player : MonoBehaviour,IDamageable
+public class Player : MonoBehaviour, IDamageable
 {
     [Header("inventory")]
     public InventoryObjects inventory;
 
-    [Header("movement"),Range(0,15)]
-    private float moveSpeed = 2.5f;
-    private float forwardMovement;
-    private float jumpHeight = 10;
-
-    [Header("grounding")]
-    [SerializeField] private LayerMask groundlayer;
-    [SerializeField] private Transform groundCheck;
+    [Header("movement"), Range(0, 15)]
+    private float moveSpeed = 5f;
+    private Vector2 movementInput;
+    private float jumpHeight = 10f;
+    private bool isLookingRight = true;
+    public bool isFacingRight
+    {
+        get { return isLookingRight; }
+        private set
+        {
+            if (isLookingRight != value)
+            {
+                transform.localScale *= new Vector2(-1, 1);
+            }
+            isLookingRight = value;
+        }
+    }
+    public bool isMoving
+    {
+        get
+        {
+            return a_isMoving;
+        }
+        private set
+        {
+            a_isMoving = value;
+            animator.SetBool("isMoving", value);
+        }
+    }
 
     [Header("refrences")]
     private Rigidbody2D rb;
 
-    [Header("health"),Range(0,5)]
+    [Header("health"), Range(0, 5)]
     private int health;
     private int maxHealth = 5;
 
     [Header("damage")]
     private int damageDone = 1;
 
-    private void Start()
+    [Header("animations")]
+    private Animator animator;
+    private bool a_isMoving = false;
+
+    [Header("other Scripts")]
+    private Detection detection;
+
+    private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
+        detection = GetComponent<Detection>();
         health = maxHealth;
     }
 
     public void OnMove(InputAction.CallbackContext context)
     {
-        if(context.performed)
+        if (context.performed)
         {
-            forwardMovement = context.ReadValue<Vector2>().x;
+            movementInput = context.ReadValue<Vector2>();
+            isMoving = movementInput != Vector2.zero;
+            FacingDirection(movementInput);
         }
     }
 
-    private void Update()
+    private void FacingDirection(Vector2 moveInput)
     {
-        rb.velocity = new Vector2(forwardMovement * moveSpeed,rb.velocity.y);
+        if (moveInput.x > 0 && !isFacingRight)
+        {
+            isFacingRight = true;
+        }
+        else if (moveInput.x < 0 && isFacingRight)
+        {
+            isFacingRight = false;
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        rb.velocity = new Vector2(movementInput.x * moveSpeed, rb.velocity.y);
+        animator.SetFloat("yVelocity", rb.velocity.y);       
     }
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        if(context.performed && WhatIsGround())
+        if (context.started && detection.isGrounded)
         {
-            rb.velocity += Vector2.up * jumpHeight;
+            animator.SetTrigger("Jump");
+            rb.velocity = new Vector2(rb.velocity.x, jumpHeight);
         }
-    }
-
-    private bool WhatIsGround()
-    {
-        return Physics2D.OverlapCapsule(groundCheck.position, new Vector2(0.65f, 0.01f), CapsuleDirection2D.Horizontal,0,groundlayer);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -67,7 +107,8 @@ public class Player : MonoBehaviour,IDamageable
             if (inventory.AddSpells(item.PickUp))
             {
                 // player feedback, success
-            } else
+            }
+            else
             {
                 // player feedback, no more room
             }
