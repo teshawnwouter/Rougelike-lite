@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class Player : MonoBehaviour, IDamageable
 {
     [Header("inventory")]
@@ -14,14 +15,21 @@ public class Player : MonoBehaviour, IDamageable
     //Get and set variables for movement
     public float moveSpeed { get 
         {
-            if(isMoving && !detection.isOnwall)
-            {
-                return movementSpeed;
+            if (CanMove) {
+                if (isMoving && !detection.isOnwall)
+                {
+                    return movementSpeed;
+                }
+                else
+                {
+                    return 0;
+                }
             }
             else
             {
                 return 0;
             }
+            
         }
     }
     public bool isFacingRight
@@ -48,7 +56,7 @@ public class Player : MonoBehaviour, IDamageable
             animator.SetBool("isMoving", value);
         }
     }
-
+    public bool CanMove { get {  return animator.GetBool("canMove"); } }
 
     [Header("refrences")]
     private Rigidbody2D rb;
@@ -106,7 +114,7 @@ public class Player : MonoBehaviour, IDamageable
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (context.started && detection.isGrounded)
+        if (context.started && detection.isGrounded && CanMove)
         {
             animator.SetTrigger("Jump");
             rb.velocity = new Vector2(rb.velocity.x, jumpHeight);
@@ -118,7 +126,6 @@ public class Player : MonoBehaviour, IDamageable
         if (context.started)
         {
             animator.SetTrigger("Attack");
-            Debug.Log("attack");
         }
     }
 
@@ -156,6 +163,7 @@ public class Player : MonoBehaviour, IDamageable
 
     private void OnApplicationQuit()
     {
+        //voor rest logica
         inventory.container.Clear();
     }
 
