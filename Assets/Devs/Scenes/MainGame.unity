@@ -144,11 +144,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2013605917907572526, guid: 5b2a196734ec28442b4047737e86ca42, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -43.66
+      value: -31.53
       objectReference: {fileID: 0}
     - target: {fileID: 2013605917907572526, guid: 5b2a196734ec28442b4047737e86ca42, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -7.83
+      value: -7.77
       objectReference: {fileID: 0}
     - target: {fileID: 2013605917907572526, guid: 5b2a196734ec28442b4047737e86ca42, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1487,11 +1487,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed5a9e75d295fef4cbd3b9692d350764, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 0
   rigidbody2D: {fileID: 0}
+  health: 0
   walkSpeed: 0
-  detection: {fileID: 0}
   abletoMoveVector: {x: 0, y: 0}
+  wallScaling: 0
+  detection: {fileID: 0}
 --- !u!114 &1396519872
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1989,7 +1990,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 17.794165
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
