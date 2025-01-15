@@ -7,10 +7,23 @@ public class Player : MonoBehaviour, IDamageable
     public InventoryObjects inventory;
 
     [Header("movement"), Range(0, 15)]
-    private float moveSpeed = 5f;
     private Vector2 movementInput;
     private float jumpHeight = 10f;
+    private float movementSpeed = 5f;
     private bool isLookingRight = true;
+    //Get and set variables for movement
+    public float moveSpeed { get 
+        {
+            if(isMoving && !detection.isOnwall)
+            {
+                return movementSpeed;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+    }
     public bool isFacingRight
     {
         get { return isLookingRight; }
@@ -35,6 +48,7 @@ public class Player : MonoBehaviour, IDamageable
             animator.SetBool("isMoving", value);
         }
     }
+
 
     [Header("refrences")]
     private Rigidbody2D rb;
@@ -61,6 +75,12 @@ public class Player : MonoBehaviour, IDamageable
         health = maxHealth;
     }
 
+    private void FixedUpdate()
+    {
+        rb.velocity = new Vector2(movementInput.x * moveSpeed, rb.velocity.y);
+        animator.SetFloat("yVelocity", rb.velocity.y);       
+    }
+
     public void OnMove(InputAction.CallbackContext context)
     {
         if (context.performed)
@@ -83,11 +103,6 @@ public class Player : MonoBehaviour, IDamageable
         }
     }
 
-    private void FixedUpdate()
-    {
-        rb.velocity = new Vector2(movementInput.x * moveSpeed, rb.velocity.y);
-        animator.SetFloat("yVelocity", rb.velocity.y);       
-    }
 
     public void OnJump(InputAction.CallbackContext context)
     {
@@ -95,6 +110,15 @@ public class Player : MonoBehaviour, IDamageable
         {
             animator.SetTrigger("Jump");
             rb.velocity = new Vector2(rb.velocity.x, jumpHeight);
+        }
+    }
+
+    public void OnAttack(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            animator.SetTrigger("Attack");
+            Debug.Log("attack");
         }
     }
 

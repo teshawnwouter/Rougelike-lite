@@ -12,7 +12,7 @@ public class Detection : MonoBehaviour
     private RaycastHit2D[] wallHits = new RaycastHit2D[5];
     private RaycastHit2D[] ceilingHits = new RaycastHit2D[5];
 
-    private float groundDist = 0.01f;
+    private float groundDist = 0.05f;
     private float ceilingDist = 0.05f;
     private float wallDist = 0.2f;
 
@@ -37,6 +37,7 @@ public class Detection : MonoBehaviour
             animator.SetBool("isOnWall", value);
         }
     }
+
     public bool isTouchingCeiling
     {
         get { return isOnCeiling; }
@@ -53,11 +54,12 @@ public class Detection : MonoBehaviour
         animator = GetComponent<Animator>();
 
     }
+
     private void FixedUpdate()
     {
      
         isGrounded = touchingcollider.Cast(Vector2.down, collisionFilter, groundHits, groundDist) > 0;
         isOnwall = touchingcollider.Cast(wallchecking, collisionFilter, wallHits, wallDist) > 0;
-        isOnCeiling = touchingcollider.Cast(Vector2.up, collisionFilter, ceilingHits, groundDist) > 0;
+        isOnCeiling = touchingcollider.Cast(Vector2.up, collisionFilter, ceilingHits, ceilingDist) > 0;
     }
 }
