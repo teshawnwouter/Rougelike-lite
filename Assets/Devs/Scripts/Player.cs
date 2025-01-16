@@ -12,10 +12,12 @@ public class Player : MonoBehaviour, IDamageable
     private float jumpHeight = 10f;
     private float movementSpeed = 5f;
     private bool isLookingRight = true;
+    [SerializeField] private bool canMove = true;
+
     //Get and set variables for movement
     public float moveSpeed { get 
         {
-            if (CanMove) {
+            if (canMove) {
                 if (isMoving && !detection.isOnwall)
                 {
                     return movementSpeed;
@@ -56,7 +58,7 @@ public class Player : MonoBehaviour, IDamageable
             animator.SetBool("isMoving", value);
         }
     }
-    public bool CanMove { get {  return animator.GetBool("canMove"); } }
+
 
     [Header("refrences")]
     private Rigidbody2D rb;
@@ -86,7 +88,12 @@ public class Player : MonoBehaviour, IDamageable
     private void FixedUpdate()
     {
         rb.velocity = new Vector2(movementInput.x * moveSpeed, rb.velocity.y);
-        animator.SetFloat("yVelocity", rb.velocity.y);       
+        animator.SetFloat("yVelocity", rb.velocity.y);
+        if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+        {
+            canMove = true;
+            animator.SetBool("canMove", canMove);
+        }
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -114,7 +121,7 @@ public class Player : MonoBehaviour, IDamageable
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (context.started && detection.isGrounded && CanMove)
+        if (context.started && detection.isGrounded && canMove)
         {
             animator.SetTrigger("Jump");
             rb.velocity = new Vector2(rb.velocity.x, jumpHeight);
@@ -127,6 +134,8 @@ public class Player : MonoBehaviour, IDamageable
         {
             animator.SetTrigger("Attack");
         }
+        canMove = false;
+        animator.SetBool("canMove", canMove);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

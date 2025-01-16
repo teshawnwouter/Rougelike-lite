@@ -1,16 +1,15 @@
 using System;
 using UnityEngine;
-using static Enemy;
-
 public class RuiGolem : Enemy
 {
-    GameObject ruinGolem;
     public void Awake()
     {
         detection = GetComponent<Detection>();
         rigidbody2D = GetComponent<Rigidbody2D>();
+        //variables from main script
         health = 9;
-        walkSpeed = 2.5f;
+        walkSpeed = 5f;
+        abletoMoveVector = new Vector2(-1, 0);
     }
 
 
