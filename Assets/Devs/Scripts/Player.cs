@@ -15,9 +15,12 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private bool canMove = true;
 
     //Get and set variables for movement
-    public float moveSpeed { get 
+    public float moveSpeed
+    {
+        get
         {
-            if (canMove) {
+            if (canMove)
+            {
                 if (isMoving && !detection.isOnwall)
                 {
                     return movementSpeed;
@@ -31,7 +34,7 @@ public class Player : MonoBehaviour, IDamageable
             {
                 return 0;
             }
-            
+
         }
     }
     public bool isFacingRight
@@ -77,11 +80,21 @@ public class Player : MonoBehaviour, IDamageable
     [Header("other Scripts")]
     private Detection detection;
 
+    [Header("iFrames")]
+    private bool isInIFrames;
+    private bool isAlive;
+    private float timeSindsHit = 0;
+    public float IframeTimer = 0.25f; 
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         detection = GetComponent<Detection>();
+
+        isInIFrames = false;
+        isAlive = true;
+
         health = maxHealth;
     }
 
@@ -89,10 +102,17 @@ public class Player : MonoBehaviour, IDamageable
     {
         rb.velocity = new Vector2(movementInput.x * moveSpeed, rb.velocity.y);
         animator.SetFloat("yVelocity", rb.velocity.y);
-        if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+        animator.SetBool("CanMove", canMove);
+
+
+
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("PlayerAttack_1") || animator.GetCurrentAnimatorStateInfo(0).IsName("Spawn"))
+        {
+            canMove = false;
+        }
+        else
         {
             canMove = true;
-            animator.SetBool("canMove", canMove);
         }
     }
 
@@ -134,8 +154,6 @@ public class Player : MonoBehaviour, IDamageable
         {
             animator.SetTrigger("Attack");
         }
-        canMove = false;
-        animator.SetBool("canMove", canMove);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -178,6 +196,22 @@ public class Player : MonoBehaviour, IDamageable
 
     public void TakeDamage(int Amount)
     {
-        health -= Amount;
+        if (isAlive && !isInIFrames)
+        {
+            health -= Amount;
+            animator.SetTrigger("Hit");
+            isInIFrames = true;
+        }
+    }
+
+    private void Update()
+    {
+        if(timeSindsHit > IframeTimer)
+        {
+            isInIFrames = false;
+            timeSindsHit = 0;
+        }
+        timeSindsHit += Time.deltaTime;
+        TakeDamage(1);
     }
 }

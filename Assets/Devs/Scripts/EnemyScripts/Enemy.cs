@@ -17,6 +17,11 @@ public class Enemy : MonoBehaviour, IDamageable
     [Header("detections")]
     public Detection detection; 
     private MoveDirections moveDirections;
+    public DetectionZone attackZone;
+    public float walkStopRate;
+
+    [Header("animations")]
+     public Animator animator;
 
     public MoveDirections moveDir
     {
@@ -38,6 +43,8 @@ public class Enemy : MonoBehaviour, IDamageable
             moveDirections = value;
         }
     }
+
+
     public enum MoveDirections { right, left }
 
     public virtual void TakeDamage(int Amount)
