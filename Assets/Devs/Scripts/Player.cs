@@ -12,9 +12,9 @@ public class Player : MonoBehaviour, IDamageable
     private float jumpHeight = 10f;
     private float movementSpeed = 5f;
     private bool isLookingRight = true;
-    [SerializeField] private bool canMove = true;
+    private bool canMove = true;
 
-    //Get and set variables for movement
+    //Get and set variables 
     public float moveSpeed
     {
         get
@@ -61,7 +61,18 @@ public class Player : MonoBehaviour, IDamageable
             animator.SetBool("isMoving", value);
         }
     }
-
+    public bool isLiving
+    {
+        get
+        {
+            return isAlive;
+        }
+        private set
+        {
+            isAlive = value;
+            animator.SetBool("isAlive", value);
+        }
+    }
 
     [Header("refrences")]
     private Rigidbody2D rb;
@@ -82,9 +93,9 @@ public class Player : MonoBehaviour, IDamageable
 
     [Header("iFrames")]
     private bool isInIFrames;
-    private bool isAlive;
+    [SerializeField] private bool isAlive;
     private float timeSindsHit = 0;
-    public float IframeTimer = 0.25f; 
+    private float IframeTimer = 0.25f;
 
     private void Awake()
     {
@@ -102,11 +113,11 @@ public class Player : MonoBehaviour, IDamageable
     {
         rb.velocity = new Vector2(movementInput.x * moveSpeed, rb.velocity.y);
         animator.SetFloat("yVelocity", rb.velocity.y);
-        animator.SetBool("CanMove", canMove);
+        animator.SetBool("canMove", canMove);
 
-
-
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("PlayerAttack_1") || animator.GetCurrentAnimatorStateInfo(0).IsName("Spawn"))
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("PlayerAttack_1")
+            || animator.GetCurrentAnimatorStateInfo(0).IsName("Spawn")
+            || animator.GetCurrentAnimatorStateInfo(0).IsName("Death"))
         {
             canMove = false;
         }
@@ -121,9 +132,17 @@ public class Player : MonoBehaviour, IDamageable
         if (context.performed)
         {
             movementInput = context.ReadValue<Vector2>();
-            isMoving = movementInput != Vector2.zero;
-            FacingDirection(movementInput);
+            if (isAlive)
+            {
+                isMoving = movementInput != Vector2.zero;
+                FacingDirection(movementInput);
+            }
+            else
+            {
+                isMoving = false;
+            }
         }
+
     }
 
     private void FacingDirection(Vector2 moveInput)
@@ -184,7 +203,7 @@ public class Player : MonoBehaviour, IDamageable
 
         if (obj != null)
         {
-            obj.TakeDamage(damageDone);
+            //obj.TakeDamage(damageDone);
         }
     }
 
@@ -202,16 +221,21 @@ public class Player : MonoBehaviour, IDamageable
             animator.SetTrigger("Hit");
             isInIFrames = true;
         }
+        if (health <= 0)
+        {
+            isAlive = false;
+            animator.SetBool("isAlive", isAlive);
+        }
     }
 
     private void Update()
     {
-        if(timeSindsHit > IframeTimer)
+        if (timeSindsHit > IframeTimer)
         {
             isInIFrames = false;
             timeSindsHit = 0;
         }
         timeSindsHit += Time.deltaTime;
-        TakeDamage(1);
+        //TakeDamage(1);
     }
 }

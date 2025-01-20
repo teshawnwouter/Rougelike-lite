@@ -1,27 +1,45 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-[RequireComponent(typeof(Rigidbody2D),typeof(Detection))]
+[RequireComponent(typeof(Rigidbody2D), typeof(Detection))]
 public class Enemy : MonoBehaviour, IDamageable
 {
     [Header("components")]
     public new Rigidbody2D rigidbody2D;
 
-    [Header("Health")]
+    [Header("Health"), Range(0, 1000)]
     public int health;
+    [SerializeField] private bool isAlive;
 
     [Header("movement")]
     public float walkSpeed;
     public Vector2 abletoMoveVector;
+    public bool canMove = true;
 
     [Header("detections")]
-    public Detection detection; 
+    public Detection detection;
     private MoveDirections moveDirections;
     public DetectionZone attackZone;
     public float walkStopRate;
 
     [Header("animations")]
-     public Animator animator;
+    public Animator animator;
+    public float fadeTime = 0.5f;
+    public float timeElapsed = 0f;
+    public SpriteRenderer spriteRenderer;
+    public GameObject killedEnemy;
+    public Color startcolor;
+    public float newAlpha;
+
+    public bool gotTarget = false;
+
+    public bool hasTarget
+    {
+        get { return gotTarget; }
+        private set
+        {
+            gotTarget = value;
+            animator.SetBool("HasTarget", value);
+        }
+    }
 
     public MoveDirections moveDir
     {
@@ -44,21 +62,46 @@ public class Enemy : MonoBehaviour, IDamageable
         }
     }
 
-
     public enum MoveDirections { right, left }
 
-    public virtual void TakeDamage(int Amount)
+    public bool isLiving
     {
-        health -= Amount;
-        if (health <= 0)
+        get { return isAlive; }
+        set
         {
-            //plays death animation
-            //chance to drop spell WIP;
-            Destroy(gameObject);
+            isAlive = value;
+            animator.SetBool("IsAlive", value);
+            Debug.Log(value);
+
+            
         }
     }
 
-    public  void FlipDirection()
+    public bool isMoving
+    {
+        get { return canMove; }
+        set
+        {
+            canMove = value;
+            animator.SetBool("canMove", value);
+        }
+    }
+
+    public virtual void TakeDamage(int Amount)
+    {
+        if (isAlive)
+        {
+            health -= Amount;
+        }
+        if (health <= 0)
+        {
+            //chance to drop spell WIP;
+            canMove = false;
+            isLiving = false;
+        }
+    }
+
+    public void FlipDirection()
     {
         if (moveDir == MoveDirections.right)
         {
@@ -68,5 +111,11 @@ public class Enemy : MonoBehaviour, IDamageable
         {
             moveDir = MoveDirections.right;
         }
+    }
+
+    private void Update()
+    {
+        hasTarget = attackZone.detectioncolls.Count > 0;
+        TakeDamage(1);
     }
 }
