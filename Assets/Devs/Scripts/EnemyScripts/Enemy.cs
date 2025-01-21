@@ -1,23 +1,28 @@
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 [RequireComponent(typeof(Rigidbody2D), typeof(Detection))]
 public class Enemy : MonoBehaviour, IDamageable
 {
+    //makes them move left or right
+    public enum MoveDirections { right, left }
+
     [Header("components")]
     public new Rigidbody2D rigidbody2D;
 
     [Header("Health"), Range(0, 1000)]
     public int health;
-    [SerializeField] private bool isAlive;
+    public bool isAlive;
 
     [Header("movement")]
     public float walkSpeed;
     public Vector2 abletoMoveVector;
-    public bool canMove = true;
+    public bool canMove;
 
     [Header("detections")]
     public Detection detection;
     private MoveDirections moveDirections;
     public DetectionZone attackZone;
+    public bool gotTarget = false;
     public float walkStopRate;
 
     [Header("animations")]
@@ -29,8 +34,16 @@ public class Enemy : MonoBehaviour, IDamageable
     public Color startcolor;
     public float newAlpha;
 
-    public bool gotTarget = false;
-
+    //Properties
+    public bool isMoving
+    {
+        get { return canMove; }
+        set
+        {
+            canMove = value;
+            animator.SetBool("isMoving", value);
+        }
+    }
     public bool hasTarget
     {
         get { return gotTarget; }
@@ -62,7 +75,6 @@ public class Enemy : MonoBehaviour, IDamageable
         }
     }
 
-    public enum MoveDirections { right, left }
 
     public bool isLiving
     {
@@ -70,20 +82,7 @@ public class Enemy : MonoBehaviour, IDamageable
         set
         {
             isAlive = value;
-            animator.SetBool("IsAlive", value);
-            Debug.Log(value);
-
-            
-        }
-    }
-
-    public bool isMoving
-    {
-        get { return canMove; }
-        set
-        {
-            canMove = value;
-            animator.SetBool("canMove", value);
+            animator.SetBool("IsAlive", value);            
         }
     }
 
@@ -92,6 +91,7 @@ public class Enemy : MonoBehaviour, IDamageable
         if (isAlive)
         {
             health -= Amount;
+            animator.SetTrigger("Hit");
         }
         if (health <= 0)
         {
@@ -116,6 +116,5 @@ public class Enemy : MonoBehaviour, IDamageable
     private void Update()
     {
         hasTarget = attackZone.detectioncolls.Count > 0;
-        TakeDamage(1);
     }
 }

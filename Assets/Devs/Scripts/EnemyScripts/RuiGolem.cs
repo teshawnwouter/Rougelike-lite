@@ -1,9 +1,11 @@
+using System.Runtime.CompilerServices;
 using UnityEngine;
 public class RuiGolem : Enemy
 {
    
-    public void Start()
+    public void Awake()
     {
+        //components
         attackZone = GetComponentInChildren<DetectionZone>();
         animator = GetComponent<Animator>();
         detection = GetComponent<Detection>();
@@ -18,23 +20,25 @@ public class RuiGolem : Enemy
         killedEnemy = animator.gameObject;
         startcolor = spriteRenderer.color;
 
-        isLiving = true;
+        isAlive = true;    
+        canMove = false;
     }
 
     private void FixedUpdate()
     {
+        //checks if you are on the ground en hit a wall
         if (detection.isGrounded && detection.isOnwall)
         {
             FlipDirection();
         }
-
-        if (canMove)
+        //lets them move if they are alive
+        if (isMoving)
         {
-            if (!gotTarget && isLiving)
+            if (!gotTarget && isAlive)
             {
                 rigidbody2D.velocity = new Vector2(walkSpeed * abletoMoveVector.x, rigidbody2D.velocity.y);
             }
-            else if (gotTarget && isLiving)
+            else if (gotTarget && isAlive)
             {
                 rigidbody2D.velocity = new Vector2(Mathf.Lerp(rigidbody2D.velocity.x, 0, walkStopRate), rigidbody2D.velocity.y);
             }
@@ -44,6 +48,7 @@ public class RuiGolem : Enemy
             rigidbody2D.velocity = new Vector2(0, rigidbody2D.velocity.y);
         }
 
+        //animation fade when dead
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("Enemy_Death"))
         {
             canMove = false;
@@ -55,10 +60,14 @@ public class RuiGolem : Enemy
 
             if (timeElapsed > fadeTime)
             {
-                //Destroy(killedEnemy);
+                Destroy(killedEnemy);
             }
         }
-        else if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Enemy_Death"))
+        //locks the enemy from moving while his is attacking
+        else if (animator.GetCurrentAnimatorStateInfo(0).IsName("GolemAttack_1"))
+        {
+            canMove = false;
+        }else if(!animator.GetCurrentAnimatorStateInfo(0).IsName("GolemAttack_1") ||!animator.GetCurrentAnimatorStateInfo(0).IsName("Enemy_Death"))
         {
             canMove = true;
         }
