@@ -22,7 +22,7 @@ public class Detection : MonoBehaviour
     private float wallDist = 0.2f;
 
     [Header("bools for checking")]
-    private bool isOnGround = true;
+    public bool isOnGround = true;
     private bool isOnWall;
     private bool isOnCeiling;
 

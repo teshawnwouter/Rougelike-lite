@@ -13,6 +13,8 @@ public class Player : MonoBehaviour, IDamageable
     private float movementSpeed = 5f;
     private bool isLookingRight = true;
     private bool canMove = true;
+    private bool canJump = true;
+    private bool canSlamNext = false;
 
     [Header("refrences")]
     private Rigidbody2D rb;
@@ -93,6 +95,24 @@ public class Player : MonoBehaviour, IDamageable
             animator.SetBool("isAlive", value);
         }
     }
+    public bool isAbleToAirJump
+    {
+        get { return canJump; }
+        private set
+        {
+            canJump = value;
+            animator.SetBool("canDoubleJump", value);
+        }
+    }
+    public bool isInSumerdsalt
+    {
+        get { return canSlamNext; }
+        private set
+        {
+            canSlamNext = value;
+            animator.SetBool("InSummerSalt", value);
+        }
+    }
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -117,6 +137,8 @@ public class Player : MonoBehaviour, IDamageable
 
         //check of the attack spawn of death state active is
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("PlayerAttack_1")
+            || animator.GetCurrentAnimatorStateInfo(0).IsName("PlayerAttack_2")
+            || animator.GetCurrentAnimatorStateInfo(0).IsName("PlayerAttack_3")
             || animator.GetCurrentAnimatorStateInfo(0).IsName("Spawn")
             || animator.GetCurrentAnimatorStateInfo(0).IsName("Death"))
         {
@@ -125,6 +147,20 @@ public class Player : MonoBehaviour, IDamageable
         else
         {
             canMove = true;
+        }
+
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("PlayerAir_Attack_1")
+            || animator.GetCurrentAnimatorStateInfo(0).IsName("PlayerAir_Attack_2"))
+        {
+            rb.velocity = new Vector2(rb.velocity.x / 2, 0);
+        }
+        else if (animator.GetCurrentAnimatorStateInfo(0).IsName("player_plungeLoop"))
+        {
+            rb.velocity = new Vector2(rb.velocity.x / 2, rb.velocity.y * 1.4f);
+        }
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("player_Slam"))
+        {
+            detection.isOnGround = true;
         }
     }
 
@@ -168,6 +204,12 @@ public class Player : MonoBehaviour, IDamageable
         {
             animator.SetTrigger("Jump");
             rb.velocity = new Vector2(rb.velocity.x, jumpHeight);
+        }
+        else if (context.started && !detection.isGrounded && isAbleToAirJump && canMove)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, jumpHeight);
+            canSlamNext = true;
+            canJump = false;
         }
     }
 
@@ -236,5 +278,11 @@ public class Player : MonoBehaviour, IDamageable
             timeSindsHit = 0;
         }
         timeSindsHit += Time.deltaTime;
+
+        if (detection.isGrounded)
+        {
+            canJump = true;
+            canSlamNext = false;
+        }
     }
 }
