@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static UnityEngine.Rendering.DebugUI;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class Player : MonoBehaviour, IDamageable
@@ -11,10 +12,11 @@ public class Player : MonoBehaviour, IDamageable
     private Vector2 movementInput;
     private float jumpHeight = 10f;
     private float movementSpeed = 5f;
+    private float plungSpeed = 1.5f;
     private bool isLookingRight = true;
     private bool canMove = true;
-    private bool canJump = true;
-    private bool canSlamNext = false;
+    private bool canDoubleJump = true;
+    private bool canPlunge = false;
 
     [Header("refrences")]
     private Rigidbody2D rb;
@@ -92,31 +94,28 @@ public class Player : MonoBehaviour, IDamageable
         private set
         {
             isAlive = value;
-            animator.SetBool("isAlive", value);
         }
     }
-    public bool isAbleToAirJump
+    public bool isGoingTojumpAgain
     {
-        get { return canJump; }
+        get { return canDoubleJump; }
         private set
         {
-            canJump = value;
-            animator.SetBool("canDoubleJump", value);
+            canDoubleJump = value;
         }
     }
-    public bool isInSumerdsalt
+    public bool isSumersalting
     {
-        get { return canSlamNext; }
+        get { return canPlunge; }
         private set
         {
-            canSlamNext = value;
-            animator.SetBool("InSummerSalt", value);
+            canPlunge = value;
         }
     }
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        animator = GetComponent<Animator>();
+        animator = gameObject.GetComponent<Animator>();
         detection = GetComponent<Detection>();
 
         isInIFrames = false;
@@ -153,15 +152,24 @@ public class Player : MonoBehaviour, IDamageable
             || animator.GetCurrentAnimatorStateInfo(0).IsName("PlayerAir_Attack_2"))
         {
             rb.velocity = new Vector2(rb.velocity.x / 2, 0);
+            animator.ResetTrigger("Jump");
         }
         else if (animator.GetCurrentAnimatorStateInfo(0).IsName("player_plungeLoop"))
         {
-            rb.velocity = new Vector2(rb.velocity.x / 2, rb.velocity.y * 1.4f);
+            rb.velocity = new Vector2(rb.velocity.x / 2, rb.velocity.y - plungSpeed);
+            animator.ResetTrigger("Jump");
         }
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("player_Slam"))
         {
-            detection.isOnGround = true;
+            animator.ResetTrigger("Jump");
+            animator.ResetTrigger("Attack");
         }
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Sumersalt"))
+        {
+            isSumersalting = true;
+        }
+
+
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -205,11 +213,10 @@ public class Player : MonoBehaviour, IDamageable
             animator.SetTrigger("Jump");
             rb.velocity = new Vector2(rb.velocity.x, jumpHeight);
         }
-        else if (context.started && !detection.isGrounded && isAbleToAirJump && canMove)
+        else if (context.started && !detection.isGrounded && isGoingTojumpAgain && canMove)
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpHeight);
-            canSlamNext = true;
-            canJump = false;
+            canDoubleJump = false;
         }
     }
 
@@ -256,7 +263,7 @@ public class Player : MonoBehaviour, IDamageable
     /// <param name="Amount">the amount of damage you are going to take from enemies</param>
     public void TakeDamage(int Amount)
     {
-        if (isAlive && !isInIFrames)
+        if (isLiving && !isInIFrames)
         {
             health -= Amount;
             animator.SetTrigger("Hit");
@@ -281,8 +288,35 @@ public class Player : MonoBehaviour, IDamageable
 
         if (detection.isGrounded)
         {
-            canJump = true;
-            canSlamNext = false;
+            canDoubleJump = true;
+            canPlunge = false;
+        }
+        CheckDoubleJump();
+        GoingToPlunge();
+    }
+    
+
+    private void CheckDoubleJump()
+    {
+        if (!canDoubleJump)
+        {
+            animator.SetBool("isGoingToSumersalt", false);
+        }
+        else
+        {
+            animator.SetBool("isGoingToSumersalt", true);
+        }
+    }
+
+    private void GoingToPlunge()
+    {
+        if (isSumersalting)
+        {
+            animator.SetBool("isGoingToSlam", true);
+        }
+        else
+        {
+            animator.SetBool("isGoingToSlam", false);
         }
     }
 }
