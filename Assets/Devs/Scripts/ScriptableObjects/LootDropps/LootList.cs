@@ -10,9 +10,10 @@ public class LootList : MonoBehaviour
     public List<Spells> lootList = new List<Spells>();
     public Spells droppedItem;
 
+    //regeld een random droprate voor de spells en haalt ze van een mogelijke drop lijst
     Spells DroppingItems()
     {
-        int randomNumber = Random.Range(1, 10);
+        int randomNumber = Random.Range(1, 101);
         List<Spells> possibleItems = new List<Spells>();
         foreach (Spells item in lootList)
         {
@@ -31,6 +32,7 @@ public class LootList : MonoBehaviour
 
     }
 
+    //kijkt wat de dropped spell is en spawnt hem in
     public void DroppedTheItem(Vector2 SpawnPoint)
     {
         droppedItem = DroppingItems();

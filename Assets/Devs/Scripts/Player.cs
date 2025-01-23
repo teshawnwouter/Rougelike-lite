@@ -197,6 +197,7 @@ public class Player : MonoBehaviour, IDamageable
         Debug.Log(selectedSpell);
     }
 
+    //hij heeft de inventory en kijkt naar de indexes en wat er in staat en zet de current spell gelijk daar aan
     private void SelectedSpell()
     {
         if (inventory.container.Count != 0)
@@ -282,10 +283,12 @@ public class Player : MonoBehaviour, IDamageable
             animator.SetTrigger("Attack");
         }
     }
+    // waneer je de spell cast loopt hij door je inventory roept hij een functie van de spellcasting script en returnt naar het begin
     public void OnSpellCast(InputAction.CallbackContext context)
     {
         if (context.started)
         {
+            animator.SetTrigger("CastSpell");
             for (int i = 0; i < inventory.container.Count; i++)
             {
                 if (selectedSpell == inventory.container.IndexOf(spellCasting.fireBall, i))
@@ -322,6 +325,7 @@ public class Player : MonoBehaviour, IDamageable
         }
     }
 
+    //hij gaat voorbij een switch om tekijken wat de selected spell is en als de selected spell index grooter  of gelijk is aan de inventory index gaat hij na 0
     public void OnSpellSwitch(InputAction.CallbackContext context)
     {
         if (context.started)

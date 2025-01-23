@@ -5,8 +5,10 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class ProjectileSpells : MonoBehaviour
 {
+    [Header("spell properties")]
     private float spellSpeed = 3f;
     private int spellDamage;
+    [Header("components")]
     private Rigidbody2D rb;
     public Spells spells;
     private Player player;

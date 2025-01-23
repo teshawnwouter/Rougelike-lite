@@ -4,29 +4,32 @@ using UnityEngine;
 public class SpellCasting : MonoBehaviour
 {
     public Transform castPoint;
+    private Player player;
 
+    [Header("Spells")]
     public Spells fireBall;
-    public GameObject fire;
-
-    public Spells iceShard;
-    public GameObject ice;
-
     public Spells auraBlast;
-    public GameObject aura;
-
+    public Spells iceShard;
     public Spells healing;
-    public GameObject heal;
-
     public Spells explosion;
+
+    [Header("GameObjects")]
+    public GameObject fire;
+    public GameObject ice;
+    public GameObject aura;
+    public GameObject heal;
     public GameObject explosions;
 
-    private Player player;
 
     private void Awake()
     {
         player = GetComponent<Player>();
     }
 
+    /// <summary>
+    /// dit zijn de spells die je kan casten
+    /// </summary>
+  
     public void FireBall()
     {
         if (fireBall != null)
