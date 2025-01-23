@@ -9,9 +9,10 @@ public class DeathReset : MonoBehaviour
 
     private void Start()
     {
-        Player = GetComponent<Player>();
+        Player = FindObjectOfType<Player>();
         onDeath += Death;
     }
+
     private void Update()
     {
         if (!Player.isAlive)
@@ -24,6 +25,5 @@ public class DeathReset : MonoBehaviour
     {
         Player.animator.SetBool("isAlive", Player.isAlive);
         Player.inventory.container.Clear();
-
     }
 }

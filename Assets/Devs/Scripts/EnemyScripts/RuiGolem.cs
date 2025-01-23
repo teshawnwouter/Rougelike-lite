@@ -14,7 +14,7 @@ public class RuiGolem : Enemy
 
         //variables from main script
         walkStopRate = 0.05f;
-        health = 900;
+        health = 50;
         walkSpeed = 3f;
         abletoMoveVector = new Vector2(-1, 0);
         killedEnemy = animator.gameObject;

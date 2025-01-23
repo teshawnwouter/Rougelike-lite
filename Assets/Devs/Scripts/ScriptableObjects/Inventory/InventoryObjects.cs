@@ -21,34 +21,4 @@ public class InventoryObjects : ScriptableObject, IPickUpable
         }
         return true;
     }
-
-
-    //private Spells[] m_SpellsList = new Spells[6];
-
-    //public bool Add(Spells spell)
-    //{
-    //    for (int i = 0; i < m_SpellsList.Length; ++i)
-    //    {
-    //        if (m_SpellsList[i] == null)
-    //        {
-    //            m_SpellsList[i] = spell;
-    //            return true;
-    //        }
-    //    }
-
-    //    // er was geen space meer.
-    //    return false;
-    //}
-
 }
-
-//[System.Serializable]
-//public class SpellContainer
-//{
-//    public Spells spells;
-//    public SpellContainer(Spells spells)
-//    {
-//        this.spells = spells;
-//    }
-
-//}

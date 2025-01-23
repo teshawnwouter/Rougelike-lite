@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 public abstract class PickUpItem : ScriptableObject
 {
     public enum PickUpType
@@ -8,8 +9,11 @@ public abstract class PickUpItem : ScriptableObject
     }
 
     [Header("variables")]
-    public GameObject prefab;
     public PickUpType pickUpType;
     [TextArea(20, 20)]
     public string description;
+    public Sprite sprite;
+    public int dropRate;
+    public int Value;
+
 }

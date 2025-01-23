@@ -245,14 +245,17 @@ public class Player : MonoBehaviour, IDamageable
             animator.SetTrigger("Attack");
         }
     }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
 
+    }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Item item = collision.GetComponent<Item>();
+        AddToInventory item = collision.gameObject.GetComponent<AddToInventory>();
         if (item != null)
         {
             // check if there is room for new spells...
-            if (inventory.AddSpells(item.PickUp))
+            if (inventory.AddSpells(item.lootList.droppedItem))
             {
                 // player feedback, success
             }
@@ -283,11 +286,11 @@ public class Player : MonoBehaviour, IDamageable
 
         if (health <= 0)
         {
-           isAlive = false;
+            isAlive = false;
         }
     }
 
-    
+
 
     private void CheckDoubleJump()
     {

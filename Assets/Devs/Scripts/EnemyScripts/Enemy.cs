@@ -1,5 +1,6 @@
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI;
 [RequireComponent(typeof(Rigidbody2D), typeof(Detection))]
 public class Enemy : MonoBehaviour, IDamageable
 {
@@ -32,7 +33,7 @@ public class Enemy : MonoBehaviour, IDamageable
     public SpriteRenderer spriteRenderer;
     public GameObject killedEnemy;
     public Color startcolor;
-    public float newAlpha;
+    public float newAlpha;   
 
     //Properties
     public bool isMoving
@@ -53,7 +54,6 @@ public class Enemy : MonoBehaviour, IDamageable
             animator.SetBool("HasTarget", value);
         }
     }
-
     public MoveDirections moveDir
     {
         get { return moveDirections; }
@@ -74,18 +74,24 @@ public class Enemy : MonoBehaviour, IDamageable
             moveDirections = value;
         }
     }
-
-
     public bool isLiving
     {
         get { return isAlive; }
         set
         {
             isAlive = value;
-            animator.SetBool("IsAlive", value);            
+            animator.SetBool("IsAlive", value);
         }
     }
 
+    private void Update()
+    {
+        hasTarget = attackZone.detectioncolls.Count > 0;
+    }
+
+    private void Start()
+    {
+    }
     public virtual void TakeDamage(int Amount)
     {
         if (isAlive)
@@ -95,9 +101,16 @@ public class Enemy : MonoBehaviour, IDamageable
         }
         if (health <= 0)
         {
-            //chance to drop spell WIP;
-            canMove = false;
-            isLiving = false;
+            Death();
+        }
+    }
+    public void Death()
+    {
+        canMove = false;
+        isLiving = false;
+        if (!isLiving) 
+        {
+        FindFirstObjectByType<LootList>().DroppedTheItem(transform.position);          
         }
     }
 
@@ -113,8 +126,5 @@ public class Enemy : MonoBehaviour, IDamageable
         }
     }
 
-    private void Update()
-    {
-        hasTarget = attackZone.detectioncolls.Count > 0;
-    }
+    
 }
