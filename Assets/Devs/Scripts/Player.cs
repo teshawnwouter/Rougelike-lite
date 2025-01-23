@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using static UnityEngine.Rendering.DebugUI;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class Player : MonoBehaviour, IDamageable
@@ -26,7 +25,7 @@ public class Player : MonoBehaviour, IDamageable
     private int maxHealth = 5;
 
     [Header("animations")]
-    private Animator animator;
+    public Animator animator;
     private bool a_isMoving = false;
 
     [Header("other Scripts")]
@@ -34,7 +33,7 @@ public class Player : MonoBehaviour, IDamageable
 
     [Header("iFrames")]
     private bool isInIFrames;
-    private bool isAlive;
+    public bool isAlive;
     private float timeSindsHit = 0;
     private float IframeTimer = 0.25f;
 
@@ -169,7 +168,25 @@ public class Player : MonoBehaviour, IDamageable
             isSumersalting = true;
         }
 
+    }
 
+    //checks and sets up Iframes
+    private void Update()
+    {
+        if (timeSindsHit > IframeTimer)
+        {
+            isInIFrames = false;
+            timeSindsHit = 0;
+        }
+        timeSindsHit += Time.deltaTime;
+
+        if (detection.isGrounded)
+        {
+            canDoubleJump = true;
+            canPlunge = false;
+        }
+        CheckDoubleJump();
+        GoingToPlunge();
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -251,12 +268,6 @@ public class Player : MonoBehaviour, IDamageable
         }
     }
 
-    private void OnApplicationQuit()
-    {
-        //voor reset logica
-        inventory.container.Clear();
-    }
-
     /// <summary>
     /// checks of you ar alive and if you are in iframes to take damage if you take damag play the Hit animation and if you die play the death animation
     /// </summary>
@@ -269,31 +280,13 @@ public class Player : MonoBehaviour, IDamageable
             animator.SetTrigger("Hit");
             isInIFrames = true;
         }
+
         if (health <= 0)
         {
-            isAlive = false;
-            animator.SetBool("isAlive", isAlive);
+           isAlive = false;
         }
     }
 
-    //checks and sets up Iframes
-    private void Update()
-    {
-        if (timeSindsHit > IframeTimer)
-        {
-            isInIFrames = false;
-            timeSindsHit = 0;
-        }
-        timeSindsHit += Time.deltaTime;
-
-        if (detection.isGrounded)
-        {
-            canDoubleJump = true;
-            canPlunge = false;
-        }
-        CheckDoubleJump();
-        GoingToPlunge();
-    }
     
 
     private void CheckDoubleJump()
