@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: FireBall
   m_EditorClassIdentifier: 
   pickUpType: 1
-  description: 
   sprite: {fileID: 21300000, guid: ce82e3c23ad1b07449a7d696f70ed03b, type: 3}
   dropRate: 60
   Value: 25
   PickUp: {fileID: 11400000}
+  spelName: FireBall

@@ -7,11 +7,8 @@ public abstract class PickUpItem : ScriptableObject
         health,
         spell,
     }
-
     [Header("variables")]
     public PickUpType pickUpType;
-    [TextArea(20, 20)]
-    public string description;
     public Sprite sprite;
     public int dropRate;
     public int Value;

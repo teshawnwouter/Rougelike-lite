@@ -30,12 +30,17 @@ public class Player : MonoBehaviour, IDamageable
 
     [Header("other Scripts")]
     private Detection detection;
+    private Spells currentSpell;
 
     [Header("iFrames")]
     private bool isInIFrames;
     public bool isAlive;
     private float timeSindsHit = 0;
     private float IframeTimer = 0.25f;
+
+    [Header("spells")]
+    private int selectedSpell;
+    private SpellCasting spellCasting;
 
     //Properties
     public float moveSpeed
@@ -113,6 +118,7 @@ public class Player : MonoBehaviour, IDamageable
     }
     private void Awake()
     {
+        spellCasting = GetComponent<SpellCasting>();
         rb = GetComponent<Rigidbody2D>();
         animator = gameObject.GetComponent<Animator>();
         detection = GetComponent<Detection>();
@@ -187,6 +193,37 @@ public class Player : MonoBehaviour, IDamageable
         }
         CheckDoubleJump();
         GoingToPlunge();
+
+        Debug.Log(selectedSpell);
+    }
+
+    private void SelectedSpell()
+    {
+        if (inventory.container.Count != 0)
+        {
+            switch (selectedSpell)
+            {
+                case 1:
+                    currentSpell = inventory.container[0];
+                    break;
+                case 2:
+                    currentSpell = inventory.container[1];
+                    break;
+                case 3:
+                    currentSpell = inventory.container[2];
+                    break;
+                case 4:
+                    currentSpell = inventory.container[3];
+                    break;
+                case 5:
+                    currentSpell = inventory.container[4];
+                    break;
+                case 6:
+                    currentSpell = inventory.container[5];
+                    break;
+            }
+        }
+
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -245,9 +282,59 @@ public class Player : MonoBehaviour, IDamageable
             animator.SetTrigger("Attack");
         }
     }
-    private void OnCollisionEnter2D(Collision2D collision)
+    public void OnSpellCast(InputAction.CallbackContext context)
     {
+        if (context.started)
+        {
+            for (int i = 0; i < inventory.container.Count; i++)
+            {
+                if (selectedSpell == inventory.container.IndexOf(spellCasting.fireBall, i))
+                {
+                    spellCasting.FireBall();
+                    inventory.container.RemoveAt(i);
+                    return;
+                }
+                if ( selectedSpell == inventory.container.IndexOf(spellCasting.iceShard, i))
+                {
+                    spellCasting.IceShard();
+                    inventory.container.RemoveAt(i);
+                    return;
+                }
+                if (selectedSpell == inventory.container.IndexOf(spellCasting.auraBlast, i))
+                {
+                    spellCasting.AuraBurst();
+                    inventory.container.RemoveAt(i);
+                    return;
+                }
+                if (selectedSpell == inventory.container.IndexOf(spellCasting.healing, i))
+                {
+                    spellCasting.Healing();
+                    inventory.container.RemoveAt(i);
+                    return;
+                }
+                if (selectedSpell == inventory.container.IndexOf(spellCasting.explosion, i))
+                {
+                    spellCasting.Explosion();
+                    inventory.container.RemoveAt(i);
+                    return;
+                }
+            }
+        }
+    }
 
+    public void OnSpellSwitch(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            if (inventory.container.Count != 0)
+            {
+                selectedSpell++;
+                if (selectedSpell >= inventory.container.Count)
+                {
+                    selectedSpell = 0;
+                }
+            }
+        }
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -289,8 +376,6 @@ public class Player : MonoBehaviour, IDamageable
             isAlive = false;
         }
     }
-
-
 
     private void CheckDoubleJump()
     {

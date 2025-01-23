@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: AuraBlast
   m_EditorClassIdentifier: 
   pickUpType: 1
-  description: 
   sprite: {fileID: 21300160, guid: 3b31b7231f0eb874096e78ad656acaeb, type: 3}
   dropRate: 40
   Value: 30
   PickUp: {fileID: 11400000}
+  spelName: AuraBurst

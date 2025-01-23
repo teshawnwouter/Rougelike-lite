@@ -39,6 +39,5 @@ public class LootList : MonoBehaviour
             GameObject dropGameObject = Instantiate(droppedLoot, SpawnPoint, Quaternion.identity);
             dropGameObject.GetComponent<SpriteRenderer>().sprite = droppedItem.sprite;
         }
-        Debug.Log(droppedItem.name);
     }
 }

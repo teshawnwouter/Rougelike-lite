@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Healing
   m_EditorClassIdentifier: 
   pickUpType: 1
-  description: 
   sprite: {fileID: 21300000, guid: 8c141fd8370861143907e33acb803e11, type: 3}
   dropRate: 30
   Value: 3
   PickUp: {fileID: 11400000}
+  spelName: Healing
