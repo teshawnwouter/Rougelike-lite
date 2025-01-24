@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(CapsuleCollider2D))]
 public class Detection : MonoBehaviour
 {
     [Header("animations")]

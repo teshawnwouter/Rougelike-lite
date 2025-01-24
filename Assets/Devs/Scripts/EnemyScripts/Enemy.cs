@@ -10,7 +10,7 @@ public class Enemy : MonoBehaviour, IDamageable
     [Header("components")]
     public new Rigidbody2D rigidbody2D;
 
-    [Header("Health"), Range(0, 1000)]
+    [Header("Health"), Range(0, 10)]
     public int health;
     public bool isAlive;
 
@@ -21,7 +21,7 @@ public class Enemy : MonoBehaviour, IDamageable
 
     [Header("detections")]
     public Detection detection;
-    private MoveDirections moveDirections;
+    [SerializeField] private MoveDirections moveDirections;
     public DetectionZone attackZone;
     public bool gotTarget = false;
     public float walkStopRate;
@@ -89,9 +89,6 @@ public class Enemy : MonoBehaviour, IDamageable
         hasTarget = attackZone.detectioncolls.Count > 0;
     }
 
-    private void Start()
-    {
-    }
     public virtual void TakeDamage(int Amount)
     {
         if (isAlive)

@@ -193,38 +193,6 @@ public class Player : MonoBehaviour, IDamageable
         }
         CheckDoubleJump();
         GoingToPlunge();
-
-        Debug.Log(selectedSpell);
-    }
-
-    //hij heeft de inventory en kijkt naar de indexes en wat er in staat en zet de current spell gelijk daar aan
-    private void SelectedSpell()
-    {
-        if (inventory.container.Count != 0)
-        {
-            switch (selectedSpell)
-            {
-                case 1:
-                    currentSpell = inventory.container[0];
-                    break;
-                case 2:
-                    currentSpell = inventory.container[1];
-                    break;
-                case 3:
-                    currentSpell = inventory.container[2];
-                    break;
-                case 4:
-                    currentSpell = inventory.container[3];
-                    break;
-                case 5:
-                    currentSpell = inventory.container[4];
-                    break;
-                case 6:
-                    currentSpell = inventory.container[5];
-                    break;
-            }
-        }
-
     }
 
     public void OnMove(InputAction.CallbackContext context)
