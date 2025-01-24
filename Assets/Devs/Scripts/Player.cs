@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class Player : MonoBehaviour, IDamageable
@@ -20,9 +22,9 @@ public class Player : MonoBehaviour, IDamageable
     [Header("refrences")]
     private Rigidbody2D rb;
 
-    [Header("health"), Range(0, 5)]
-    private int health;
-    private int maxHealth = 5;
+    [Header("health")]
+    public int health;
+    public int maxHealth = 1000;
 
     [Header("animations")]
     public Animator animator;
@@ -31,6 +33,7 @@ public class Player : MonoBehaviour, IDamageable
     [Header("other Scripts")]
     private Detection detection;
     private Spells currentSpell;
+    public HealthBarSlider healthBarSlider;
 
     [Header("iFrames")]
     private bool isInIFrames;
@@ -41,6 +44,8 @@ public class Player : MonoBehaviour, IDamageable
     [Header("spells")]
     private int selectedSpell;
     private SpellCasting spellCasting;
+    public Image spellcontainer;
+    public List<Sprite> sprites;
 
     //Properties
     public float moveSpeed
@@ -118,6 +123,7 @@ public class Player : MonoBehaviour, IDamageable
     }
     private void Awake()
     {
+        healthBarSlider = FindFirstObjectByType<HealthBarSlider>();
         spellCasting = GetComponent<SpellCasting>();
         rb = GetComponent<Rigidbody2D>();
         animator = gameObject.GetComponent<Animator>();
@@ -125,8 +131,9 @@ public class Player : MonoBehaviour, IDamageable
 
         isInIFrames = false;
         isAlive = true;
-
         health = maxHealth;
+
+        healthBarSlider.SetMaxHealth(maxHealth);
     }
 
     /// <summary>
@@ -144,7 +151,7 @@ public class Player : MonoBehaviour, IDamageable
             || animator.GetCurrentAnimatorStateInfo(0).IsName("PlayerAttack_2")
             || animator.GetCurrentAnimatorStateInfo(0).IsName("PlayerAttack_3")
             || animator.GetCurrentAnimatorStateInfo(0).IsName("Spawn")
-            || animator.GetCurrentAnimatorStateInfo(0).IsName("Death"))
+            || animator.GetCurrentAnimatorStateInfo(0).IsName("PlayerDeath"))
         {
             canMove = false;
         }
@@ -179,6 +186,7 @@ public class Player : MonoBehaviour, IDamageable
     //checks and sets up Iframes
     private void Update()
     {
+        healthBarSlider.SetHealth(health);
         if (timeSindsHit > IframeTimer)
         {
             isInIFrames = false;
@@ -193,6 +201,11 @@ public class Player : MonoBehaviour, IDamageable
         }
         CheckDoubleJump();
         GoingToPlunge();
+
+        if (inventory.container != null) 
+        {
+            CheckingSpellIndex();
+        }
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -267,24 +280,28 @@ public class Player : MonoBehaviour, IDamageable
                 }
                 if ( selectedSpell == inventory.container.IndexOf(spellCasting.iceShard, i))
                 {
+                    spellcontainer.sprite = sprites[1];
                     spellCasting.IceShard();
                     inventory.container.RemoveAt(i);
                     return;
                 }
                 if (selectedSpell == inventory.container.IndexOf(spellCasting.auraBlast, i))
                 {
+                    spellcontainer.sprite = sprites[2];
                     spellCasting.AuraBurst();
                     inventory.container.RemoveAt(i);
                     return;
                 }
                 if (selectedSpell == inventory.container.IndexOf(spellCasting.healing, i))
                 {
+                    spellcontainer.sprite = sprites[3];
                     spellCasting.Healing();
                     inventory.container.RemoveAt(i);
                     return;
                 }
                 if (selectedSpell == inventory.container.IndexOf(spellCasting.explosion, i))
                 {
+                    spellcontainer.sprite = sprites[4];
                     spellCasting.Explosion();
                     inventory.container.RemoveAt(i);
                     return;
@@ -308,20 +325,50 @@ public class Player : MonoBehaviour, IDamageable
             }
         }
     }
+
+    //loops through the inventory and places the sprite depending on what spell is in the inventory
+    private void CheckingSpellIndex()
+    {
+        for (int i = 0; i < inventory.container.Count; i++)
+        {
+            if (selectedSpell == inventory.container.IndexOf(spellCasting.fireBall, i))
+            {
+                spellcontainer.sprite = sprites[0];
+
+            }
+            if (selectedSpell == inventory.container.IndexOf(spellCasting.auraBlast, i))
+            {
+                spellcontainer.sprite = sprites[1];
+            }
+            if (selectedSpell == inventory.container.IndexOf(spellCasting.healing, i))
+            {
+                spellcontainer.sprite = sprites[2];
+            }
+            if (selectedSpell == inventory.container.IndexOf(spellCasting.explosion, i))
+            {
+                spellcontainer.sprite = sprites[3];
+            }
+            if (selectedSpell == inventory.container.IndexOf(spellCasting.iceShard, i))
+            {
+                spellcontainer.sprite = sprites[4];
+            }
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         AddToInventory item = collision.gameObject.GetComponent<AddToInventory>();
         if (item != null)
         {
             // check if there is room for new spells...
-            if (inventory.AddSpells(item.lootList.droppedItem))
+            if (inventory.AddSpells(item.spells))
             {
                 // player feedback, success
             }
-            else
-            {
-                // player feedback, no more room
-            }
+            //else
+            //{
+            //    // player feedback, no more room
+            //}
             Destroy(collision.gameObject);
         }
         else
@@ -338,6 +385,7 @@ public class Player : MonoBehaviour, IDamageable
     {
         if (isLiving && !isInIFrames)
         {
+           
             health -= Amount;
             animator.SetTrigger("Hit");
             isInIFrames = true;

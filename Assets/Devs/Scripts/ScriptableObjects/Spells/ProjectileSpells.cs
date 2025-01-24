@@ -6,7 +6,7 @@ using UnityEngine;
 public class ProjectileSpells : MonoBehaviour
 {
     [Header("spell properties")]
-    private float spellSpeed = 3f;
+    private float spellSpeed = 6f;
     private int spellDamage;
     [Header("components")]
     private Rigidbody2D rb;

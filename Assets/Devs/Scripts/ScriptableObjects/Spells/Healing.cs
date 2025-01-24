@@ -4,15 +4,23 @@ using UnityEngine;
 
 public class Healing : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    private int healingAmont;
 
-    // Update is called once per frame
-    void Update()
+    public Spells spell;
+    private Player player;
+
+    private void Start()
     {
-        
+        player = FindObjectOfType<Player>();
+        healingAmont = spell.Value;
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (player.health <= player.maxHealth) 
+        { 
+        player.health += healingAmont;
+        }
+       Destroy(gameObject);
+
     }
 }

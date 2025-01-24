@@ -1,6 +1,6 @@
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
+
 [RequireComponent(typeof(Rigidbody2D), typeof(Detection))]
 public class Enemy : MonoBehaviour, IDamageable
 {
@@ -33,8 +33,9 @@ public class Enemy : MonoBehaviour, IDamageable
     public SpriteRenderer spriteRenderer;
     public GameObject killedEnemy;
     public Color startcolor;
-    public float newAlpha;   
+    public float newAlpha;
 
+    public UnityEvent OnEnemyDeath;
     //Properties
     public bool isMoving
     {
@@ -84,9 +85,21 @@ public class Enemy : MonoBehaviour, IDamageable
         }
     }
 
+    
+
+    private void OnDisable()
+    {
+        OnEnemyDeath.Invoke();
+    }
+
     private void Update()
     {
         hasTarget = attackZone.detectioncolls.Count > 0;
+    }
+
+    public void LootDrop()
+    {
+        FindFirstObjectByType<LootList>().DroppedTheItem(transform.position);
     }
 
     public virtual void TakeDamage(int Amount)
@@ -97,20 +110,12 @@ public class Enemy : MonoBehaviour, IDamageable
             animator.SetTrigger("Hit");
         }
         if (health <= 0)
-        {
-            Death();
+        { 
+            isLiving = false;
+            canMove = false;
         }
     }
-    public void Death()
-    {
-        canMove = false;
-        isLiving = false;
-        if (!isLiving) 
-        {
-        FindFirstObjectByType<LootList>().DroppedTheItem(transform.position);          
-        }
-    }
-
+   
     public void FlipDirection()
     {
         if (moveDir == MoveDirections.right)
@@ -123,5 +128,5 @@ public class Enemy : MonoBehaviour, IDamageable
         }
     }
 
-    
+
 }

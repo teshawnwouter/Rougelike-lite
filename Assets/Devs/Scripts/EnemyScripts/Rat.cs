@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Rat : Enemy
 {
+   
     public void Awake()
     {
         //components

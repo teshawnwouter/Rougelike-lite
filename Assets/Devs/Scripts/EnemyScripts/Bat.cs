@@ -1,25 +1,34 @@
 using System;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
+
 [RequireComponent(typeof(Rigidbody2D))]
-public class Bat : MonoBehaviour,IDamageable
+public class Bat : MonoBehaviour, IDamageable
 {
     private DetectionZone attackZone;
     private float flightSpeed = 2;
     private float destenationReached = 0;
 
     private Rigidbody2D rb;
-    Animator animator;
+    [SerializeField] private Animator animator;
     bool gotTarget;
 
     public bool isAlive;
     public bool canMove;
 
-    private int health = 3;
+    private int health = 30;
 
     private int waypointIndex;
-    public Transform nextWaypoint;
+    public GameObject target;
+
+    public float fadeTime = 0.5f;
+    public float timeElapsed = 0f;
+    public SpriteRenderer spriteRenderer;
+    public GameObject killedEnemy;
+    public Color startcolor;
+    public float newAlpha;
+
+    private Vector2 offset;
     public bool isMoving
     {
         get { return canMove; }
@@ -29,7 +38,6 @@ public class Bat : MonoBehaviour,IDamageable
             animator.SetBool("isMoving", value);
         }
     }
-
     public bool isLiving
     {
         get { return isAlive; }
@@ -40,6 +48,7 @@ public class Bat : MonoBehaviour,IDamageable
         }
     }
 
+    public UnityEvent OnLootDrop; 
 
     public bool hasTarget
     {
@@ -48,6 +57,7 @@ public class Bat : MonoBehaviour,IDamageable
         {
             gotTarget = value;
             animator.SetBool("HasTarget", value);
+            killedEnemy = animator.gameObject;
         }
     }
     private void Awake()
@@ -56,10 +66,32 @@ public class Bat : MonoBehaviour,IDamageable
         animator = GetComponent<Animator>();
         attackZone = GetComponentInChildren<DetectionZone>();
     }
-   
+    private void OnDisable()
+    {
+        OnLootDrop.Invoke();
+    }
+    public void LootDrop()
+    {
+        FindFirstObjectByType<LootList>().DroppedTheItem(transform.position);
+    }
+
     private void Update()
-    { 
+    {
         hasTarget = attackZone.detectioncolls.Count > 0;
+
+        animator.SetBool("IsMoving", true);
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("BatDeath"))
+        {
+            timeElapsed += Time.deltaTime;
+            newAlpha = (1 - timeElapsed / fadeTime);
+            spriteRenderer.color = new Color(startcolor.r, startcolor.g, startcolor.b, newAlpha);
+
+
+            if (timeElapsed > fadeTime)
+            {
+                Destroy(killedEnemy);
+            }
+        }
     }
 
     private void FixedUpdate()
@@ -75,19 +107,27 @@ public class Bat : MonoBehaviour,IDamageable
                 rb.velocity = Vector3.zero;
             }
         }
-        
     }
 
     private void Flight()
     {
-        Vector2 directionWayPoint = (nextWaypoint.position - transform.position);
+        Vector2 directionWayPoint = (target.transform.position - transform.position);
 
-        float dist = Vector2.Distance(nextWaypoint.position, transform.position);
+        float dist = Vector2.Distance(target.transform.position, transform.position);
 
-        rb.velocity = directionWayPoint * flightSpeed;
-        // UpDateDirection();
+        if(transform.localScale.x < 0)
+        {
+            offset = new Vector2(0.5f,0);
+        }
+        else
+        {
+            offset = new Vector2(-0.5f,0);
+        }
 
-        if(dist < destenationReached)
+        rb.velocity = directionWayPoint + offset * flightSpeed;
+        UpDateDirection();
+
+        if (dist < destenationReached)
         {
             animator.SetTrigger("Attack");
         }
@@ -95,12 +135,26 @@ public class Bat : MonoBehaviour,IDamageable
 
     private void UpDateDirection()
     {
-        
+        Vector2 locScale = transform.localScale;
+
+        if (transform.localScale.x > 0)
+        {
+            if (rb.velocity.x < 0)
+            {
+                transform.localScale = new Vector2(-1 * locScale.x, locScale.y);
+            }
+        }
+        else
+        {
+            if (rb.velocity.x > 0)
+            {
+                transform.localScale = new Vector2(-1 * locScale.x, locScale.y);
+            }
+        }
     }
 
     public void TakeDamage(int Amount)
     {
-
         if (isAlive)
         {
             health -= Amount;
@@ -108,16 +162,9 @@ public class Bat : MonoBehaviour,IDamageable
         }
         if (health <= 0)
         {
-            Death();
-        }  
-    }
-    public void Death()
-    {
-        canMove = false;
-        isLiving = false;
-        if (!isLiving)
-        {
-            FindFirstObjectByType<LootList>().DroppedTheItem(transform.position);
+            
+            canMove = false;
+            isLiving = false;
         }
     }
 }

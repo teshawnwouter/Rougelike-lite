@@ -58,7 +58,7 @@ public class SpellCasting : MonoBehaviour
     {
         if (healing != null)
         {
-            if (player.inventory.container.Contains(healing)) { Instantiate(healing, castPoint.position, Quaternion.identity); }
+            if (player.inventory.container.Contains(healing)) { Instantiate(heal, castPoint.position, Quaternion.identity); }
         }
     }
 

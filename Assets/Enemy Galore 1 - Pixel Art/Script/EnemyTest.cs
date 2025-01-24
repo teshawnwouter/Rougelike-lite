@@ -48,7 +48,7 @@ public class EnemyTest : MonoBehaviour
             if (EnemyAnims[i].gameObject.activeSelf == true)
             {
                 EnemyAnims[i].SetBool("Run", false);
-                EnemyAnims[i].SetTrigger("Death");
+                EnemyAnims[i].SetTrigger("PlayerDeath");
                 Debug.Log("The enemy " + EnemyAnims[i].gameObject.name + " has died");
             }
         }
