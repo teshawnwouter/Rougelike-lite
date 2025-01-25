@@ -37,6 +37,7 @@ public class Enemy : MonoBehaviour, IDamageable
     public float newAlpha;
 
     public UnityEvent OnEnemyDeath;
+
     //Properties
     public bool isMoving
     {

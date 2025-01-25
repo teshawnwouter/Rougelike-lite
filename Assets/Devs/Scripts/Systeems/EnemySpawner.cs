@@ -31,8 +31,6 @@ public class EnemySpawner : MonoBehaviour
         {
             for (int i = 0; i < enemyTypes.Length; i++)
             {
-
-
                 if (enemyTypes[1])
                 {
                     Instantiate(enemyTypes[0], batoffset, Quaternion.identity);

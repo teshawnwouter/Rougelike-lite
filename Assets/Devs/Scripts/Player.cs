@@ -1,7 +1,8 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -25,7 +26,7 @@ public class Player : MonoBehaviour, IDamageable
 
     [Header("health")]
     public int health;
-    public int maxHealth = 1000;
+    public int maxHealth = 100;
 
     [Header("animations")]
     public Animator animator;
@@ -122,6 +123,9 @@ public class Player : MonoBehaviour, IDamageable
             canPlunge = value;
         }
     }
+
+    public UnityEvent Ondeath;
+
     private void Awake()
     {
         healthBarSlider = FindFirstObjectByType<HealthBarSlider>();
@@ -203,10 +207,16 @@ public class Player : MonoBehaviour, IDamageable
         CheckDoubleJump();
         GoingToPlunge();
 
-        if (inventory.container != null) 
+        if (inventory.container != null)
         {
             CheckingSpellIndex();
         }
+    }
+
+    public void ResteInventory()
+    {
+        inventory.container.Clear();
+        animator.SetBool("isAlive", isAlive);
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -277,7 +287,7 @@ public class Player : MonoBehaviour, IDamageable
                     inventory.container.RemoveAt(i);
                     return;
                 }
-                if ( selectedSpell == inventory.container.IndexOf(spellCasting.iceShard, i))
+                if (selectedSpell == inventory.container.IndexOf(spellCasting.iceShard, i))
                 {
                     spellcontainer.sprite = sprites[1];
                     spellCasting.IceShard();
@@ -333,7 +343,6 @@ public class Player : MonoBehaviour, IDamageable
             if (selectedSpell == inventory.container.IndexOf(spellCasting.fireBall, i))
             {
                 spellcontainer.sprite = sprites[0];
-
             }
             if (selectedSpell == inventory.container.IndexOf(spellCasting.auraBlast, i))
             {
@@ -351,32 +360,37 @@ public class Player : MonoBehaviour, IDamageable
             {
                 spellcontainer.sprite = sprites[4];
             }
-            else
-            {
-                spellcontainer.sprite= sprites[5];
-            }
         }
+        
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        AddToInventory item = collision.gameObject.GetComponent<AddToInventory>();
-        if (item != null)
+
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("PickUps"))
         {
-            // check if there is room for new spells...
-            if (inventory.AddSpells(item.spells))
+            AddToInventory item = collision.gameObject.GetComponent<AddToInventory>();
+            if (item != null)
             {
-                // player feedback, success
+                // check if there is room for new spells...
+                if (inventory.AddSpells(item.spells))
+                {
+                    // player feedback, success
+                }
+                //else
+                //{
+                //    // player feedback, no more room
+                //}
+                Destroy(collision.gameObject);
             }
-            //else
-            //{
-            //    // player feedback, no more room
-            //}
-            Destroy(collision.gameObject);
-        }
-        else
-        {
-            Debug.Log("no item found");
+            else
+            {
+                Debug.Log("no item found");
+            }
         }
     }
 
@@ -388,7 +402,7 @@ public class Player : MonoBehaviour, IDamageable
     {
         if (isLiving && !isInIFrames)
         {
-           
+
             health -= Amount;
             animator.SetTrigger("Hit");
             isInIFrames = true;
@@ -397,6 +411,7 @@ public class Player : MonoBehaviour, IDamageable
         if (health <= 0)
         {
             isAlive = false;
+            Ondeath.Invoke();
         }
     }
 
