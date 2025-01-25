@@ -10,6 +10,6 @@ public class SceneManagement : MonoBehaviour
 
     public void StartGame()
     {
-        SceneManager.GetSceneByName("MainGame");
+        SceneManager.LoadScene("MainGame");
     }
 }

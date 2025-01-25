@@ -207,12 +207,6 @@ public class Player : MonoBehaviour, IDamageable
         {
             CheckingSpellIndex();
         }
-        Debug.Log(animator.GetCurrentAnimatorStateInfo(0));
-        if (animator.GetCurrentAnimatorStateInfo(0).length >= 1f)
-        {
-            Debug.Log("dead");
-            //SceneManager.GetSceneByName("Start");
-        }
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -232,7 +226,6 @@ public class Player : MonoBehaviour, IDamageable
                 canMove = false;
             }
         }
-
     }
     //checks the current direction you are facing
     private void FacingDirection(Vector2 moveInput)
@@ -246,7 +239,6 @@ public class Player : MonoBehaviour, IDamageable
             isFacingRight = false;
         }
     }
-
 
     public void OnJump(InputAction.CallbackContext context)
     {
