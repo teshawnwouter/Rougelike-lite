@@ -1168,8 +1168,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 806d2d9280c8bc44db4584e957669682, type: 3}
-  m_Type: 0
+  m_Sprite: {fileID: 10917, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -1236,7 +1236,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventory: {fileID: 11400000, guid: 9ab413cbe15953c4c967aa8709d1edaa, type: 2}
   health: 0
-  maxHealth: 100
+  maxHealth: 5
   animator: {fileID: 753607616}
   healthBarSlider: {fileID: 0}
   isAlive: 0
@@ -1247,6 +1247,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: bf4d04c1401745445bea6161012def11, type: 3}
   - {fileID: 21300000, guid: cd85387e4a956f340a68266ad8ee52bf, type: 3}
   - {fileID: 21300000, guid: e6f3235abfc642f42935934ce1d94828, type: 3}
+  - {fileID: 10917, guid: 0000000000000000f000000000000000, type: 0}
 --- !u!114 &753607603
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1508,7 +1509,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &910004743
 MonoBehaviour:
   m_ObjectHideFlags: 0

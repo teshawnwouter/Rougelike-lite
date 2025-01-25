@@ -80,7 +80,7 @@ public class Bat : MonoBehaviour, IDamageable
     {
         hasTarget = attackZone.detectioncolls.Count > 0;
 
-        animator.SetBool("IsMoving", true);
+        animator.SetBool("isMoving", true);
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("BatDeath"))
         {
             timeElapsed += Time.deltaTime;

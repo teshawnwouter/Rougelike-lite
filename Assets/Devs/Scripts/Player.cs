@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -205,6 +206,12 @@ public class Player : MonoBehaviour, IDamageable
         if (inventory.container != null) 
         {
             CheckingSpellIndex();
+        }
+        Debug.Log(animator.GetCurrentAnimatorStateInfo(0));
+        if (animator.GetCurrentAnimatorStateInfo(0).length >= 1f)
+        {
+            Debug.Log("dead");
+            //SceneManager.GetSceneByName("Start");
         }
     }
 
