@@ -10,7 +10,7 @@ public class Enemy : MonoBehaviour, IDamageable
     [Header("components")]
     public new Rigidbody2D rigidbody2D;
 
-    [Header("Health"), Range(0, 10)]
+    [Header("Health")]
     public int health;
     public bool isAlive;
 
@@ -22,6 +22,7 @@ public class Enemy : MonoBehaviour, IDamageable
     [Header("detections")]
     public Detection detection;
     [SerializeField] private MoveDirections moveDirections;
+    public DetectionZone groundDetection;
     public DetectionZone attackZone;
     public bool gotTarget = false;
     public float walkStopRate;
@@ -85,8 +86,6 @@ public class Enemy : MonoBehaviour, IDamageable
         }
     }
 
-    
-
     private void OnDisable()
     {
         OnEnemyDeath.Invoke();
@@ -110,12 +109,12 @@ public class Enemy : MonoBehaviour, IDamageable
             animator.SetTrigger("Hit");
         }
         if (health <= 0)
-        { 
+        {
             isLiving = false;
             canMove = false;
         }
     }
-   
+
     public void FlipDirection()
     {
         if (moveDir == MoveDirections.right)

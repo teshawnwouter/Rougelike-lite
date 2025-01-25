@@ -6,7 +6,7 @@ using UnityEngine.Events;
 public class Bat : MonoBehaviour, IDamageable
 {
     private DetectionZone attackZone;
-    private float flightSpeed = 2;
+    private float flightSpeed = 3;
     private float destenationReached = 0;
 
     private Rigidbody2D rb;
@@ -65,6 +65,7 @@ public class Bat : MonoBehaviour, IDamageable
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         attackZone = GetComponentInChildren<DetectionZone>();
+        target = GameObject.FindGameObjectWithTag("Player");
     }
     private void OnDisable()
     {

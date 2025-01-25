@@ -21,10 +21,12 @@ public class ProjectileSpells : MonoBehaviour
         if (player.isFacingRight)
         {
             rb.velocity = new Vector2(spellSpeed, 0);
+            transform.localScale = new Vector2(gameObject.transform.localScale.x * 1, transform.localScale.y);
         }
         else
         {
             rb.velocity = new Vector2(-spellSpeed, 0);
+            transform.localScale = new Vector2(gameObject.transform.localScale.x * -1, transform.localScale.y);
         }
     }
 

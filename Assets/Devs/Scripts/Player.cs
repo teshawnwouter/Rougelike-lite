@@ -352,6 +352,10 @@ public class Player : MonoBehaviour, IDamageable
             {
                 spellcontainer.sprite = sprites[4];
             }
+            else
+            {
+                spellcontainer.sprite= sprites[5];
+            }
         }
     }
 

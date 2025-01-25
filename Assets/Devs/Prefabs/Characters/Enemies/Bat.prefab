@@ -65,7 +65,7 @@ PolygonCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.09}
+  m_Offset: {x: 0.27, y: 0.15}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -77,12 +77,13 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: -0.11451626, y: -0.08272457}
-      - {x: -0.20256835, y: -0.05898568}
+    - - {x: -0.14652249, y: -0.095865615}
+      - {x: -0.19408065, y: -0.09636911}
+      - {x: -0.21611053, y: -0.10798904}
       - {x: -0.21486807, y: -0.13596192}
-      - {x: -0.11489862, y: -0.25443852}
-      - {x: 0.008370042, y: -0.21213078}
-      - {x: 0.014355183, y: -0.11723429}
+      - {x: -0.2094726, y: -0.17463791}
+      - {x: -0.12452762, y: -0.17034891}
+      - {x: -0.12407252, y: -0.14798258}
   m_UseDelaunayMesh: 0
 --- !u!114 &6810218496152679337
 MonoBehaviour:
@@ -108,7 +109,10 @@ GameObject:
   - component: {fileID: 5022386993094280119}
   - component: {fileID: 6329527139532931270}
   - component: {fileID: -6127206588450172407}
-  m_Layer: 0
+  - component: {fileID: 3946775841813993407}
+  - component: {fileID: 458931607193186742}
+  - component: {fileID: 7400080097378236834}
+  m_Layer: 13
   m_Name: Bat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -125,7 +129,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -41.08, y: -6.67, z: -0.12204491}
-  m_LocalScale: {x: -0.75, y: 0.75, z: 1}
+  m_LocalScale: {x: -6, y: 6, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2515094906465830394}
@@ -172,7 +176,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 5
   m_Sprite: {fileID: 7013631516640934163, guid: b438465a32eb63243a7889eb1f400d29, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -205,6 +209,105 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!50 &3946775841813993407
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2366113495341461199}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4
+--- !u!114 &458931607193186742
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2366113495341461199}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79052ddd28236f14fb99a7bf54e1e8a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 0}
+  isAlive: 1
+  canMove: 1
+  target: {fileID: 0}
+  fadeTime: 0.5
+  timeElapsed: 0
+  spriteRenderer: {fileID: 6329527139532931270}
+  killedEnemy: {fileID: 0}
+  startcolor: {r: 0, g: 0, b: 0, a: 0}
+  newAlpha: 0
+  OnLootDrop:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 458931607193186742}
+        m_TargetAssemblyTypeName: Bat, Assembly-CSharp
+        m_MethodName: LootDrop
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!70 &7400080097378236834
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2366113495341461199}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_Size: {x: 0.18, y: 0.18}
+  m_Direction: 0
 --- !u!1 &2432950818984049052
 GameObject:
   m_ObjectHideFlags: 0
@@ -270,7 +373,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.06, y: 0}
+  m_Offset: {x: 0.16, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}

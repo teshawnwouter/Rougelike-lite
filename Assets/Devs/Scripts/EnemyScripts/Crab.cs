@@ -17,8 +17,8 @@ public class Crab : Enemy
 
         //variables from main script
         walkStopRate = 0.05f;
-        health = 50;
-        walkSpeed = 3f;
+        health = 20;
+        walkSpeed = 2f;
         abletoMoveVector = new Vector2(-1, 0);
         killedEnemy = animator.gameObject;
         startcolor = spriteRenderer.color;
@@ -30,7 +30,7 @@ public class Crab : Enemy
     private void FixedUpdate()
     {
         //checks if you are on the ground en hit a wall
-        if (detection.isGrounded && detection.isOnwall)
+        if (detection.isGrounded && detection.isOnwall || groundDetection.detectioncolls.Count == 0)
         {
             FlipDirection();
         }

@@ -13,7 +13,4 @@ MonoBehaviour:
   m_Name: PlayerInventory
   m_EditorClassIdentifier: 
   container:
-  - {fileID: 11400000, guid: c7983e91cef7e0947aa22b03d55f8d7f, type: 2}
   - {fileID: 11400000, guid: c945c58bac1cc6a409148366a8c243b1, type: 2}
-  - {fileID: 11400000, guid: b2e6adefca274e847855393c4677e11c, type: 2}
-  - {fileID: 11400000, guid: 8c559e9b6ab6ce54780fd91d12e0cc47, type: 2}
